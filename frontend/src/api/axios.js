@@ -1,13 +1,11 @@
-import axios from 'axios';
+// src/api.js
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api' // ✅ Vite env variable
-});
-
-API.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
-
-export default API;
+export const login = async (email, password) => {
+  const res = await fetch(`${API_BASE}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  return res.json();
+};
