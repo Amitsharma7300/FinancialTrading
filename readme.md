@@ -29,7 +29,7 @@ File Upload: Multer
 
 
 1️⃣ Clone the Repository
-git clone https://github.com/your-username/mini-trading-app.git
+git clone https://github.com/Amitsharma7300/FinancialTrading.git
 cd mini-trading-app
 
 Backend Setup
