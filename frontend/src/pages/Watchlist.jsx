@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import API from "../api/axios";
+import { useEffect, useState } from "react";
+import { FaArrowDown, FaArrowUp, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { FaArrowUp, FaArrowDown, FaTrash } from "react-icons/fa";
+import API from "../api/axios";
 
 export default function Watchlist() {
   const [list, setList] = useState([]);
@@ -18,7 +18,7 @@ export default function Watchlist() {
       const res = await API.get("/watchlist", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setList(res.data || []);
+      setList(res.data.watchlist || []);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -33,7 +33,7 @@ export default function Watchlist() {
       const res = await API.delete(`/watchlist/remove/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setList(res.data);
+      setList(res.data.watchlist || []);
     } catch (err) {
       console.error(err);
     }
@@ -47,7 +47,7 @@ export default function Watchlist() {
         { productId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setList(res.data);
+      setList(res.data.watchlist || []);
     } catch (err) {
       console.error(err);
     }
