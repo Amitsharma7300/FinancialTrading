@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import API from '../api/axios';
 
 export default function Portfolio() {
@@ -52,7 +52,11 @@ export default function Portfolio() {
 
     try {
       const res = await API.post('/transactions/sell', { productId, units });
-      setWallet(res.data.wallet);
+  setWallet(res.data.wallet);
+  // Update wallet in localStorage for consistency
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  user.wallet = res.data.wallet;
+  localStorage.setItem('user', JSON.stringify(user));
 
       const tx = res.data.transaction;
 
