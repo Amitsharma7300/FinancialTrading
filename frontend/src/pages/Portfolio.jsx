@@ -29,8 +29,24 @@ export default function Portfolio() {
       });
       setProductsMap(holdings);
 
-      const u = JSON.parse(localStorage.getItem('user') || '{}');
-      setWallet(u?.wallet ?? 0);
+      // Fetch wallet from backend for up-to-date value
+      const token = localStorage.getItem('token');
+      let walletValue = 0;
+      if (token) {
+        try {
+          const resWallet = await API.get('/users/me', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          walletValue = resWallet.data.wallet;
+          // Also update localStorage for consistency
+          const user = JSON.parse(localStorage.getItem('user') || '{}');
+          user.wallet = walletValue;
+          localStorage.setItem('user', JSON.stringify(user));
+        } catch (err) {
+          console.error('Failed to fetch wallet:', err);
+        }
+      }
+      setWallet(walletValue);
       setLoading(false);
     } catch (err) {
       console.error(err);
