@@ -1,20 +1,21 @@
 const express = require("express");
 const router = express.Router();
-
+const auth = require("../middleware/auth");
 const User = require("../models/User");
-const auth = require("../middlewares/auth");
+const Product = require("../models/Product");
 
-// Get watchlist
+// GET all watchlist items for logged-in user
 router.get("/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate("watchlist");
-    res.json({ watchlist: user.watchlist });
+    res.json(user.watchlist); // returns full product objects
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Add to watchlist
+// ADD product to watchlist
 router.post("/add", auth, async (req, res) => {
   try {
     const { productId } = req.body;
@@ -23,22 +24,27 @@ router.post("/add", auth, async (req, res) => {
       user.watchlist.push(productId);
       await user.save();
     }
-    res.json({ watchlist: user.watchlist });
+    const populatedUser = await user.populate("watchlist");
+    res.json(populatedUser.watchlist);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Remove from watchlist
-router.delete("/remove/:id", auth, async (req, res) => {
+// REMOVE product from watchlist
+router.delete("/remove/:productId", auth, async (req, res) => {
   try {
+    const { productId } = req.params;
     const user = await User.findById(req.user.id);
     user.watchlist = user.watchlist.filter(
-      (pid) => pid.toString() !== req.params.id
+      (id) => id.toString() !== productId
     );
     await user.save();
-    res.json({ watchlist: user.watchlist });
+    const populatedUser = await user.populate("watchlist");
+    res.json(populatedUser.watchlist);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
