@@ -18,10 +18,13 @@ export default function Watchlist() {
       const res = await API.get("/watchlist", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setList(res.data);
+
+      // ✅ Adjust for backend returning { watchlist: [...] }
+      setList(res.data.watchlist || []);
       setLoading(false);
     } catch (err) {
-      console.error(err);
+      console.error("Failed to fetch watchlist:", err);
+      setList([]);
       setLoading(false);
     }
   };
@@ -32,9 +35,10 @@ export default function Watchlist() {
       await API.delete(`/watchlist/remove/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      // ✅ Update local state
       setList((prev) => prev.filter((item) => item.product._id !== productId));
     } catch (err) {
-      console.error(err);
+      console.error("Failed to remove from watchlist:", err);
     }
   };
 
