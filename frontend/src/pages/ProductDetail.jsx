@@ -14,10 +14,27 @@ export default function ProductDetail() {
   const [isWatch, setIsWatch] = useState(false);
 
   useEffect(() => {
+    // Fetch product & history
     API.get(`/products/${id}`).then(res => {
       setProduct(res.data.product);
-      setHistory(res.data.history);
+      setHistory(res.data.history || []);
     });
+
+    // Check if product is in watchlist
+    const fetchWatch = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        const res = await API.get('/watchlist', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const inWatchlist = res.data.some(w => w.product._id === id);
+        setIsWatch(inWatchlist);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchWatch();
   }, [id]);
 
   const buy = async () => {
@@ -32,14 +49,34 @@ export default function ProductDetail() {
 
   const toggleWatch = async () => {
     try {
-      const res = await API.post(`/products/${id}/watch`);
-      setIsWatch(res.data.watchlist.includes(product._id));
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please login to use watchlist');
+        return;
+      }
+      if (isWatch) {
+        // Remove from watchlist
+        await API.delete(`/watchlist/remove/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setIsWatch(false);
+      } else {
+        // Add to watchlist
+        await API.post(
+          '/watchlist/add',
+          { productId: id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setIsWatch(true);
+      }
     } catch (err) {
-      alert('Please login to use watchlist');
+      console.error(err);
+      alert('Failed to update watchlist');
     }
   };
 
-  if (!product) return <div className="text-center mt-20 text-slate-400">Loading...</div>;
+  if (!product)
+    return <div className="text-center mt-20 text-slate-400">Loading...</div>;
 
   const chartData = {
     labels: history.map(h => new Date(h.date).toLocaleDateString()),
@@ -53,8 +90,8 @@ export default function ProductDetail() {
         fill: true,
         pointRadius: 3,
         pointBackgroundColor: '#06b6d4',
-      }
-    ]
+      },
+    ],
   };
 
   return (
@@ -99,8 +136,8 @@ export default function ProductDetail() {
                 plugins: { legend: { labels: { color: '#cbd5e1' } } },
                 scales: {
                   x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                  y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
-                }
+                  y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                },
               }}
             />
           </div>

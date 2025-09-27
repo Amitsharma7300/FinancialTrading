@@ -1,24 +1,42 @@
 import React, { useEffect, useState } from "react";
 import API from "../api/axios";
 import { Link } from "react-router-dom";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaTrash } from "react-icons/fa";
 
 export default function Watchlist() {
   const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        const u = JSON.parse(localStorage.getItem("user") || "{}");
-        if (!u) return;
-        const res = await API.get("/products");
-        setList(res.data.products);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetch();
+    fetchWatchlist();
   }, []);
+
+  const fetchWatchlist = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const res = await API.get("/watchlist", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setList(res.data);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
+  };
+
+  const removeFromWatchlist = async (productId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await API.delete(`/watchlist/remove/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setList((prev) => prev.filter((item) => item.product._id !== productId));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4 sm:px-6 lg:px-8 py-12">
@@ -33,20 +51,29 @@ export default function Watchlist() {
         </p>
       </div>
 
-      {/* Empty State */}
-      {list.length === 0 ? (
+      {/* Loading State */}
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <p className="text-gray-400 text-lg animate-pulse">
+            ⏳ Loading your watchlist...
+          </p>
+        </div>
+      ) : list.length === 0 ? (
+        /* Empty State */
         <div className="flex justify-center items-center py-20">
           <p className="text-gray-400 text-lg">Your watchlist is empty.</p>
         </div>
       ) : (
+        /* Watchlist Grid */
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {list.map((p) => {
+          {list.map((item) => {
+            const p = item.product;
             const change = (Math.random() * 10 - 5).toFixed(2);
             const isPositive = change >= 0;
 
             return (
               <div
-                key={p._id}
+                key={item._id}
                 className="relative bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20
                 hover:scale-105 hover:shadow-2xl transition duration-300 flex flex-col"
               >
@@ -75,14 +102,25 @@ export default function Watchlist() {
                     </p>
                   </div>
 
-                  <Link to={`/products/${p._id}`} className="mt-auto">
-                    <button className="w-full py-3 bg-gradient-to-r from-emerald-500 to-cyan-500
-                      text-white font-bold rounded-xl shadow-lg hover:from-emerald-600 hover:to-cyan-600
-                      transition-all flex items-center justify-center gap-2">
-                      View Details
-                      {isPositive ? <FaArrowUp /> : <FaArrowDown />}
+                  {/* Buttons */}
+                  <div className="flex gap-2 mt-auto">
+                    <Link to={`/products/${p._id}`} className="flex-1">
+                      <button className="w-full py-3 bg-gradient-to-r from-emerald-500 to-cyan-500
+                        text-white font-bold rounded-xl shadow-lg hover:from-emerald-600 hover:to-cyan-600
+                        transition-all flex items-center justify-center gap-2">
+                        View Details
+                        {isPositive ? <FaArrowUp /> : <FaArrowDown />}
+                      </button>
+                    </Link>
+
+                    <button
+                      onClick={() => removeFromWatchlist(p._id)}
+                      className="px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow-lg"
+                      title="Remove from Watchlist"
+                    >
+                      <FaTrash />
                     </button>
-                  </Link>
+                  </div>
                 </div>
               </div>
             );
