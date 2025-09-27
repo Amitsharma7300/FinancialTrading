@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import API from '../api/axios';
-import { useParams } from 'react-router-dom';
-import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
+import { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import { useParams } from 'react-router-dom';
+import API from '../api/axios';
 Chart.register(...registerables);
 
 export default function ProductDetail() {
@@ -28,7 +28,8 @@ export default function ProductDetail() {
         const res = await API.get('/watchlist', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const inWatchlist = res.data.some(w => w.product._id === id);
+        const watchlist = res.data.watchlist || [];
+        const inWatchlist = watchlist.some(w => (w.product?._id || w._id) === id);
         setIsWatch(inWatchlist);
       } catch (err) {
         console.error(err);
