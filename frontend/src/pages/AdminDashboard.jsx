@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import API from '../api/axios';
-
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
@@ -53,14 +52,22 @@ export default function AdminDashboard() {
                   {u.email} <span className="text-indigo-500 text-sm font-medium">({u.role || 'user'})</span>
                 </p>
                 <p className="text-gray-600 mt-1">Wallet: ₹{u.wallet || 0}</p>
-                <p className="mt-2 text-sm">
+                <div className="mt-2 text-sm">
                   <span className="font-semibold">KYC:</span>{" "}
                   {u.kyc ? (
-                    <span className="text-green-600">Yes ({u.kyc.fullName || u.kyc.name})</span>
+                    <span className="text-green-600">Yes</span>
                   ) : (
                     <span className="text-red-500">No</span>
                   )}
-                </p>
+                </div>
+                {u.kyc && (
+                  <div className="mt-2 text-xs bg-indigo-50 rounded p-2 text-gray-700">
+                    <div><span className="font-semibold">Full Name:</span> {u.kyc.fullName || u.kyc.name || '-'}</div>
+                    <div><span className="font-semibold">PAN:</span> {u.kyc.pan || '-'}</div>
+                    
+                  
+                  </div>
+                )}
               </div>
             ))}
           </div>
