@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema({
   role: { type: String, enum: ['user','admin'], default: 'user' },
   wallet: { type: Number, default: 100000 }, // seed ₹100,000
   kyc: { type: KycSchema, default: null },
-  watchlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  watchlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }]
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", UserSchema);

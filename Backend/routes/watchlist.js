@@ -8,7 +8,8 @@ const Product = require("../models/Product");
 router.get("/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate("watchlist");
-    res.json(user.watchlist); // returns full product objects
+    console.log("Watchlist:", user.watchlist); // Debug log
+    res.json(user.watchlist);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });

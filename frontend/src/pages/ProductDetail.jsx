@@ -12,6 +12,8 @@ export default function ProductDetail() {
   const [units, setUnits] = useState(1);
   const [message, setMessage] = useState('');
   const [isWatch, setIsWatch] = useState(false);
+  const [watchlist, setWatchlist] = useState([]);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     // Fetch product & history
@@ -23,20 +25,19 @@ export default function ProductDetail() {
     // Check if product is in watchlist
     const fetchWatch = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) return;
         const res = await API.get('/watchlist', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const watchlist = res.data.watchlist || [];
+        const watchlist = res.data || [];
         const inWatchlist = watchlist.some(w => (w.product?._id || w._id) === id);
         setIsWatch(inWatchlist);
+        setWatchlist(watchlist);
       } catch (err) {
         console.error(err);
       }
     };
-    fetchWatch();
-  }, [id]);
+    if (token) fetchWatch();
+  }, [id, token]);
 
   const buy = async () => {
     setMessage('');
@@ -50,25 +51,22 @@ export default function ProductDetail() {
 
   const toggleWatch = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Please login to use watchlist');
-        return;
-      }
       if (isWatch) {
         // Remove from watchlist
-        await API.delete(`/watchlist/remove/${id}`, {
+        const res = await API.delete(`/watchlist/remove/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setIsWatch(false);
+        setWatchlist(res.data); // <-- set to updated array
       } else {
         // Add to watchlist
-        await API.post(
+        const res = await API.post(
           '/watchlist/add',
           { productId: id },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setIsWatch(true);
+        setWatchlist(res.data); // <-- set to updated array
       }
     } catch (err) {
       console.error(err);
