@@ -1,4 +1,5 @@
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { Link } from "react-router-dom";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -12,9 +13,15 @@ export default function Footer() {
 
         {/* Quick Links */}
         <div className="flex space-x-4">
-          <a href="/about" className="hover:text-emerald-400 transition">About</a>
-          <a href="/contact" className="hover:text-emerald-400 transition">Contact</a>
-          <a href="/privacy" className="hover:text-emerald-400 transition">Privacy</a>
+          <Link to="/about" className="hover:text-emerald-400 transition">
+            About
+          </Link>
+          <Link to="/contact" className="hover:text-emerald-400 transition">
+            Contact
+          </Link>
+          <Link to="/privacy" className="hover:text-emerald-400 transition">
+            Privacy
+          </Link>
         </div>
 
         {/* Social Icons */}
@@ -45,11 +52,15 @@ export default function Footer() {
           </a>
         </div>
 
-      
+        {/* Optional Tagline */}
+        <span className="text-gray-400 text-xs">
+          Empowering smarter trades, every day 🚀
+        </span>
 
         {/* Copyright */}
         <span className="text-gray-200 text-center sm:text-right font-normal text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 text-base shadow-2xl">
-          &copy; {new Date().getFullYear()} Financial Trading. <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 text-base tracking-wide">❤️</span> by Amit
+          &copy; {new Date().getFullYear()} Financial Trading.{" "}
+          <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 text-base tracking-wide">❤️</span> by Amit
         </span>
       </div>
     </footer>
