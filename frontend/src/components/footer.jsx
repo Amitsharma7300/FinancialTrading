@@ -45,8 +45,7 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Contact */}
-     <span className="text-gray-400 text-xs"> Powering the future of financial freedom</span>
+      
 
         {/* Copyright */}
         <span className="text-gray-200 text-center sm:text-right font-normal text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 text-base shadow-2xl">
