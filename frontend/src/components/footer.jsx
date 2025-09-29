@@ -46,9 +46,8 @@ export default function Footer() {
         </div>
 
         {/* Contact */}
-       <span className="text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 flex items-center gap-1">
-📈 Powering the future of financial freedom
-</span>
+     <span className="text-gray-400 text-xs"> Powering the future of financial freedom</span>
+
         {/* Copyright */}
         <span className="text-gray-200 text-center sm:text-right font-normal text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 text-base shadow-2xl">
           &copy; {new Date().getFullYear()} Financial Trading. <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 text-base tracking-wide">❤️</span> by Amit
