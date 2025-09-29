@@ -1,15 +1,21 @@
-import React from 'react';
-import { FaTwitter, FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
 export default function Footer() {
   return (
     <footer className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-gray-200 py-3 border-t border-slate-700">
       <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0 text-xs">
 
-        
+        {/* Brand */}
         <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 text-base tracking-wide">
           Financial Trading
         </span>
+
+        {/* Quick Links */}
+        <div className="flex space-x-4">
+          <a href="/about" className="hover:text-emerald-400 transition">About</a>
+          <a href="/contact" className="hover:text-emerald-400 transition">Contact</a>
+          <a href="/privacy" className="hover:text-emerald-400 transition">Privacy</a>
+        </div>
 
         {/* Social Icons */}
         <div className="flex space-x-3">
@@ -39,7 +45,11 @@ export default function Footer() {
           </a>
         </div>
 
-     
+        {/* Contact */}
+       <span className="text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 flex items-center gap-1">
+  ⚠️ Trading involves risk. Invest wisely.
+</span>
+        {/* Copyright */}
         <span className="text-gray-200 text-center sm:text-right font-normal text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 text-base shadow-2xl">
           &copy; {new Date().getFullYear()} Financial Trading. <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 text-base tracking-wide">❤️</span> by Amit
         </span>
