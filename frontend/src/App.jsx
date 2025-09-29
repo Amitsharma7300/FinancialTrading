@@ -10,6 +10,9 @@ import ProductDetail from './pages/ProductDetail';
 import Products from './pages/Products';
 import Register from './pages/Register';
 import Watchlist from './pages/Watchlist';
+import About from './pages/about';
+import Contact from './pages/Contact';
+import Privacy from './pages/privacy';  
 
 function AppContent() {
   const [user, setUser] = useState(null);
@@ -46,7 +49,9 @@ function AppContent() {
           <Route path="/portfolio" element={<PrivateRoute><Portfolio /></PrivateRoute>} />
           <Route path="/watchlist" element={<PrivateRoute><Watchlist /></PrivateRoute>} />
           <Route path="/admin" element={<PrivateRoute adminOnly><AdminDashboard /></PrivateRoute>} />
-          {/* Add a catch-all route for undefined routes */}
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} /> 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
